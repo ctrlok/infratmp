@@ -1,0 +1,8 @@
+[Unit]
+Description=Morze tcp service
+
+[Service]
+ExecStart=/usr/bin/morze
+
+[Install]
+WantedBy=multi-user.target

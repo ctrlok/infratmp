@@ -22,6 +22,9 @@ terraform plan
 terraform apply
 ```
 
+For adding new region - add new file with data for packer to `aws_env` folder
+And update `terraform/aws_instances.tf`
+
 ## Google cloud
 ```
 kubectl apply -f kubernetes/deploy.yml

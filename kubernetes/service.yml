@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: morze
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: morze
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+
+---
+# That's will works for http services, didn't work for TCP
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: morze
+#   annotations:
+#     kubernetes.io/ingress.global-static-ip-name: morze-ip
+#   labels:
+#     app: morze
+# spec:
+#   backend:
+#     serviceName: morze
+#     servicePort: 5000

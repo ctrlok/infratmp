@@ -1,0 +1,71 @@
+{
+  "variables": {
+    "ami_name": "morze-{{isotime \"02-Jan-06 03_04_05\"}}"
+  },
+  "builders": [
+    {
+      "name": "AWS-morze",
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "099720109477"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `ami_name` | clean_ami_name}}",
+      "tags": {
+        "Name": "{{user `ami_name`}}"
+      },
+      "run_tags": {
+        "Name": "{{user `ami_name`}}"
+      },
+      "run_volume_tags": {
+        "Name": "{{user `ami_name`}}"
+      },
+      "snapshot_tags": {
+        "Name": "{{user `ami_name`}}"
+      },
+      "ami_description": "Amazon Linux with morze app",
+      "associate_public_ip_address": "true"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo ls -al"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "morze",
+      "destination": "morze"
+    },
+    {
+      "type": "file",
+      "source": "morze.service",
+      "destination": "morze.service"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo cp morze /usr/bin/morze",
+        "sudo cp morze.service /etc/systemd/system/morze.service",
+        "sudo chmod 664 /etc/systemd/system/morze.service",
+        "sudo systemctl daemon-reload",
+        "sudo systemctl enable morze",
+        "sudo systemctl start morze",
+        "sudo systemctl status morze",
+        "echo | nc 127.0.0.1 5000"
+      ]
+    }
+  ]
+}
